@@ -19,6 +19,10 @@ class Text:
   def _render(self, text):
     return self.font.render(text, True, self.color)
   
+  def move_center(self):
+    text_size = self.text.get_size()
+    self.location = [self.location[0]-text_size[0]/2, self.location[1]-text_size[1]/2]
+  
 class State(Enum):
   wrong = (255, 0, 0)
   accept = (0, 255, 0)
@@ -79,3 +83,21 @@ class TextBox:
       (self.text_width[0]/3, self.text_width[1])
     ))
     pygame.draw.rect(self.surf, self.color, ((0, 0), (self.size)), self.border)
+
+class Button:
+  def __init__(self, text, size, color, location, text_size = 40, text_color = (0, 0, 0)):
+    self.location = location
+
+    self.surf = pygame.Surface(size)
+    self.surf.fill(color)
+    
+    self.text = Text(text, text_size, text_color, [size[0]//2, size[1]//2])
+    self.text.move_center()
+
+    self.text.draw(self.surf)
+
+  def is_collided(self, point):
+    return self.surf.get_rect(topleft=self.location).collidepoint(point)
+  
+  def draw(self, screen):
+    screen.blit(self.surf, self.location)
