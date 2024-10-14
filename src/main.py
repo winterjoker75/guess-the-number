@@ -1,7 +1,5 @@
 import pygame
-from scenes.single_play import single_play
-from scenes.game_over import game_over
-from scripts.game import SingleGame
+from scenes.main_menu import main_menu
 
 if __name__=="__main__":
 	pygame.init()
@@ -9,6 +7,4 @@ if __name__=="__main__":
 	screen = pygame.display.set_mode((640, 480))
 	clock = pygame.time.Clock()
 
-	game = SingleGame()
-	single_play(screen, clock, game)
-	game_over(screen, clock, game)
+	main_menu(screen, clock)
