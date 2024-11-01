@@ -31,7 +31,7 @@ def single_play(screen, clock, game):
       elif event.type==pygame.KEYDOWN:
         if event.key==K_RETURN:
           flushed_number = text_box.flush_number()
-          if flushed_number and container.left<=flushed_number<=container.right:
+          if flushed_number:
             container.set_next(flushed_number)
             game.submit_number(flushed_number)
         elif event.key==K_BACKSPACE:

@@ -1,13 +1,14 @@
 import math
 import pygame
 from enum import Enum
+import globals.values
 
 class Text:
   def __init__(self, text, size, color, location):
     self.color = color
     self.location = location
 
-    self.font = pygame.font.SysFont("Arial", size)
+    self.font = pygame.font.SysFont("Courier", size)
     self.text = self._render(text)
 
   def update(self, text):
@@ -50,8 +51,8 @@ class TextBox:
 
   def flush_number(self) -> int:
     try:
+      assert self.error_handler()
       flushed_number = int(self.number)
-      assert 1<=flushed_number<=100
       self.number = ""
       pygame.draw.rect(self.surf, (255, 255, 255), (
         (self.text_location[0], self.text_location[1]),
@@ -83,6 +84,18 @@ class TextBox:
       (self.text_width[0]/3, self.text_width[1])
     ))
     pygame.draw.rect(self.surf, self.color, ((0, 0), (self.size)), self.border)
+
+  def error_handler(self):
+    if self.number=="":
+      globals.values.myZF = 1
+    elif not (globals.values.left<=int(self.number)<=globals.values.right):
+      globals.values.myOF = 1
+    else:
+      globals.values.myOF = 0
+      globals.values.myZF = 0
+    if globals.values.myOF or globals.values.myZF:
+      return 0
+    return 1
 
 class Button:
   def __init__(self, text, size, color, location, text_size = 40, text_color = (0, 0, 0)):
