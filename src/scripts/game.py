@@ -2,25 +2,25 @@ import math
 import pygame
 import random
 from scripts.utils import Text
+import globals.values
 
 class SingleGame:
   def __init__(self):
-    self._secret_number = random.randint(1, 100)
+    globals.values.left = 1
+    globals.values.right = 100
+    self._secret_number = random.randint(globals.values.left, globals.values.right)
     self._attempt_count = 0
-    self.current_number = 1
     self.result = ""
   
   def submit_number(self, number):
     try:
       self.result = self._evaluate_guess(number)
       self._attempt_count += 1
-      self.current_number = number
     except Exception as e:
       print(e)
   
   def receive_data(self):
     return {
-      "current_number": self.current_number,
       "result": self.result,
       "attempt_count": self._attempt_count
     }
@@ -68,9 +68,6 @@ class Container:
     self.speed = 0
     self.removable = False
 
-    self.left = 1
-    self.right = 100
-
   def update(self, result):
     if result=="":
       return
@@ -82,9 +79,9 @@ class Container:
       if self.removable:
         # self.boxes = self.boxes[(self.curr-1):]
         if result=="UP":
-          self.left = self.curr
+          globals.values.left = self.curr
         else:
-          self.right = self.curr
+          globals.values.right = self.curr
         self.removable = False
       self.curr_box_location[0] = math.floor(self.curr_box_location[0])
       self.speed = 0
@@ -95,9 +92,9 @@ class Container:
       if self.removable:
         # self.boxes = self.boxes[:(self.curr+2)]
         if result=="UP":
-          self.left = self.curr
+          globals.values.left = self.curr
         else:
-          self.right = self.curr
+          globals.values.right = self.curr
         self.removable = False
       self.curr_box_location[0] = math.floor(self.curr_box_location[0])
       self.speed = 0
@@ -114,12 +111,12 @@ class Container:
 
   def draw(self, screen):
     # for i in range(1, len(self.boxes)-1):
-    for i in range(self.left, self.right+1):
+    for i in range(globals.values.left, globals.values.right+1):
       self.boxes[i].draw(screen)
 
   def set_next(self, next):
     try:
-      assert self.left<=next<=self.right
+      assert globals.values.left<=next<=globals.values.right
 
       self.next = self.curr
       self.curr = next
@@ -134,4 +131,5 @@ class Container:
 
       self.removable = True
     except Exception as e:
+      globals.values.myOF = 1
       print(e)
